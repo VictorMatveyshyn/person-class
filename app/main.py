@@ -2,21 +2,22 @@ class Person:
     people = {}
 
     def __init__(self, name: str, age: int) -> None:
-        self.age = age
         self.name = name
+        self.age = age
         Person.people[self.name] = self
 
 
 def create_person_list(people_list: list) -> list:
     Person.people.clear()
-    out_list = []
-    for human in people_list:
-        new_person = Person(human["name"], human["age"])
+    person_list = [
+        Person(human["name"], human["age"]) for human in people_list
+    ]
+    for person_data, human in zip(person_list, people_list):
+        print(person_data, human)
+        if human.get("wife"):
+            person_data.wife = human["wife"]
         if human.get("husband"):
-            new_person.husband = human["husband"]
-        elif human.get("wife"):
-            new_person.wife = human["wife"]
-        out_list.append(new_person)
+            person_data.husband = human["husband"]
 
     for name, human in Person.people.items():
         if hasattr(human, "wife"):
@@ -24,4 +25,4 @@ def create_person_list(people_list: list) -> list:
         elif hasattr(human, "husband"):
             human.husband = Person.people[human.husband]
 
-    return out_list
+    return person_list
